@@ -1,0 +1,106 @@
+﻿@page "/admin"
+@model ProjectPRN.Pages.View.AdminModel
+@{
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        /* Hide all sections by default */
+
+        .view-books-section,
+        .add-book-section,
+        .edit-book-section,
+        .delete-book-section,
+        .user-manager-section {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Admin Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#" onclick="showSection('dashboard-section')">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showSection('view-books-section')">View Books</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showSection('add-book-section')">Add Book</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showSection('edit-book-section')">Edit Book</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showSection('delete-book-section')">Delete Book</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showSection('user-manager-section')">User Manager</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div id="dashboard-section" class="dashboard-section">
+            <!-- Dashboard content goes here -->
+            <h2>Dashboard</h2>
+        </div>
+
+        <div id="view-books-section" class="view-books-section">
+            <!-- View Books content goes here -->
+            <h2>View Books</h2>
+        </div>
+
+        <div id="add-book-section" class="add-book-section">
+            <!-- Add Book form goes here -->
+            <h2>Add Book</h2>
+        </div>
+
+        <div id="edit-book-section" class="edit-book-section">
+            <!-- Edit Book form goes here -->
+            <h2>Edit Book</h2>
+        </div>
+
+        <div id="delete-book-section" class="delete-book-section">
+            <!-- Delete Book form goes here -->
+            <h2>Delete Book</h2>
+        </div>
+
+        <div id="user-manager-section" class="user-manager-section">
+            <!-- User Manager content goes here -->
+            <h2>User Manager</h2>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.dashboard-section, .view-books-section, .add-book-section, .edit-book-section, .delete-book-section, .user-manager-section').forEach(function (section) {
+                section.style.display = 'none';
+            });
+            // Show the selected section
+            document.getElementById(sectionId).style.display = 'block';
+        }
+    </script>
+
+</body>
+
+</html>

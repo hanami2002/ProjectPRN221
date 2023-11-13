@@ -24,7 +24,7 @@ namespace ProjectPRN.Pages.View
           
         public User Users { get; set; }
 
-        public void OnGet(int bid=1)
+        public void OnGet(int? bid)
         {
             Genres = context.Genres.ToList();
             if (HttpContext.Session.GetString("user") != null)
@@ -32,8 +32,15 @@ namespace ProjectPRN.Pages.View
                 string data = HttpContext.Session.GetString("user");
                 Users = JsonSerializer.Deserialize<User>(data);
             }
-            Bid=bid;
-            BookDetail = context.Books.FirstOrDefault(x => x.BookId == bid);
+            if (bid == null)
+            {
+                BookDetail = context.Books.FirstOrDefault();
+            }
+            else
+            {
+                Bid = (int)bid;
+                BookDetail = context.Books.FirstOrDefault(x => x.BookId == bid);
+            }
             // GenreList = BookDetail.Genres.ToList();
             //Books = context.Books.Where(x=>x.Genres.Where(y=>y.))
             //Books = context.Books.Include(x => x.Genres).Where(x => x.Genres == BookDetail.)
@@ -45,6 +52,10 @@ namespace ProjectPRN.Pages.View
             {
                 string data = HttpContext.Session.GetString("user");
                 Users = JsonSerializer.Deserialize<User>(data);
+            }
+            else
+            {
+                return Redirect("/cart");
             }
             
             Order order = context.Orders.Where(x => x.UserId == Users.UserId&&x.Status.Equals("process")).FirstOrDefault();

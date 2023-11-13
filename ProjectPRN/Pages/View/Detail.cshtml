@@ -106,7 +106,7 @@
                     <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
                         @foreach (Genre genre in Model.Genres)
                         {
-                            <a href="" class="nav-item nav-link">@genre.GenreName</a>
+                            <a href="/shop?gid=@genre.GenreId" class="nav-item nav-link">@genre.GenreName</a>
                         }
                     </div>
                 </nav>

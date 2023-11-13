@@ -17,7 +17,7 @@ namespace ProjectPRN.Pages.View
         public List<Book> Books { get; set; }
 
         public User Users { get; set; }
-        public void OnGet(int? gid=1)
+        public void OnGet(int? gid)
         {
             Genres = context.Genres.ToList();
             Books = context.Books.ToList();
@@ -25,6 +25,14 @@ namespace ProjectPRN.Pages.View
             {
                 string data = HttpContext.Session.GetString("user");
                 Users = JsonSerializer.Deserialize<User>(data);
+            }
+            if (gid == null)
+            {
+                Books = context.Books.Take(9).ToList();
+            }
+            if(gid!=null)
+            {
+                Books=context.Books.Where(x=>x.GenreId==gid).Take(9).ToList();
             }
         }
     }

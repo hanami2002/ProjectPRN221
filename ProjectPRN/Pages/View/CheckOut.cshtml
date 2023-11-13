@@ -106,7 +106,7 @@
                     <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
                         @foreach (Genre genre in Model.Genres)
                         {
-                            <a href="" class="nav-item nav-link">@genre.GenreName</a>
+                            <a href="/shop?gid=@genre.GenreId" class="nav-item nav-link">@genre.GenreName</a>
                         }
                     </div>
                 </nav>
@@ -166,20 +166,22 @@
     <!-- Checkout Start -->
     <div class="container-fluid pt-5">
         <div class="row px-xl-5">
-            <div class="col-lg-8">
-                <div class="mb-4">
-                    @if (Model.Users == null)
-                    {
-                        <h1> hay dang nhap de xem thong tin ca nhan</h1>
-                    }
-                    @if (Model.Users != null)
-                    {
+            @if (Model.Users == null)
+            {
+                <h1> hay dang nhap de xem thong tin ca nhan</h1>
+            }
+            @if (Model.Users != null)
+            {
+                <div class="col-lg-8">
+                    <div class="mb-4">
+
+
                         @if (Model.Message != null)
                         {
-                            <h1 style="color:green"> @Model.Message</h1>
+                            <h1 style="color:green" >@Model.Message</h1>
                         }
-                        
-                        <form method="post" asp-page-handler="ChangePass">
+
+                        <form method="post" asp-page-handler="ChangeInfo">
                             <h4 class="font-weight-semi-bold mb-4">Billing Address</h4>
                             <div class="row">
                                 <div class="col-md-6 form-group">
@@ -213,80 +215,49 @@
 
                             </div>
                         </form>
-                    }
-                    
+
+
+                    </div>
+
                 </div>
-                <div class="collapse mb-4" id="shipping-address">
-                    <h4 class="font-weight-semi-bold mb-4">Shipping Address</h4>
-                    <div class="row">
-                        <div class="col-md-6 form-group">
-                            <label>First Name</label>
-                            <input class="form-control" type="text" placeholder="John">
+                <div class="col-lg-4">
+                    <form method="post" asp-page-handler="ChangePass">
+                        <div class="card border-secondary mb-5">
+                            <div class="card-header bg-secondary border-0">
+                                <h4 class="font-weight-semi-bold m-0">Change Password</h4>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="font-weight-medium mb-3">Products</h5>
+                                <div class="col-md-12 form-group">
+                                    <label>Current Password</label>
+                                    <input class="form-control" asp-for="Password" type="password">
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <label>New Password</label>
+                                    <input class="form-control"  id="password"  asp-for="NewPassword" type="password">
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <label>Re-New Password</label>
+                                    <input oninput="validatePassword()" class="form-control" id="confirmPassword" type="password">
+                                </div>
+
+                            </div>
+                            <h1 id="noti">@Model.NewMessage</h1>
+                            <div class="card border-secondary mb-5">
+
+                                <div class="card-footer border-secondary bg-transparent">
+                                    <button type="submit" id="btnRegister" class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3">Change Password</button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-6 form-group">
-                            <label>Last Name</label>
-                            <input class="form-control" type="text" placeholder="Doe">
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <label>E-mail</label>
-                            <input class="form-control" type="text" placeholder="example@email.com">
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <label>Mobile No</label>
-                            <input class="form-control" type="text" placeholder="+123 456 789">
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <label>Address Line 1</label>
-                            <input class="form-control" type="text" placeholder="123 Street">
-                        </div>
-                    </div>
+                    </form>
+
                 </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="card border-secondary mb-5">
-                    <div class="card-header bg-secondary border-0">
-                        <h4 class="font-weight-semi-bold m-0">Order Total</h4>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="font-weight-medium mb-3">Products</h5>
-                        <div class="d-flex justify-content-between">
-                            <p>Colorful Stylish Shirt 1</p>
-                            <p>$150</p>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <p>Colorful Stylish Shirt 2</p>
-                            <p>$150</p>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <p>Colorful Stylish Shirt 3</p>
-                            <p>$150</p>
-                        </div>
-                        <hr class="mt-0">
-                        <div class="d-flex justify-content-between mb-3 pt-1">
-                            <h6 class="font-weight-medium">Subtotal</h6>
-                            <h6 class="font-weight-medium">$150</h6>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <h6 class="font-weight-medium">Shipping</h6>
-                            <h6 class="font-weight-medium">$10</h6>
-                        </div>
-                    </div>
-                    <div class="card-footer border-secondary bg-transparent">
-                        <div class="d-flex justify-content-between mt-2">
-                            <h5 class="font-weight-bold">Total</h5>
-                            <h5 class="font-weight-bold">$160</h5>
-                        </div>
-                    </div>
+                }
                 </div>
-                <div class="card border-secondary mb-5">
-                    
-                    <div class="card-footer border-secondary bg-transparent">
-                        <button class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3">Place Order</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+            
     </div>
+    
     <!-- Checkout End -->
     <!-- Footer Start -->
     <div class="container-fluid bg-secondary text-dark mt-5 pt-5">
@@ -373,6 +344,25 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <!-- Thêm mã JavaScript trong thẻ <script> -->
+        <script>
+            function validatePassword() {
+            var password = document.getElementById("password").value;
+            var confirmPassword = document.getElementById("confirmPassword").value;
+
+            if (password !== confirmPassword) {
+                document.getElementById("confirmPassword").setCustomValidity("Passwords do not match");
+                document.getElementById("btnRegister").disabled = true;
+                document.getElementById("noti").innerHTML =" Passwords do not match";
+                 document.getElementById("noti").style.color="red";
+            } else {
+                document.getElementById("confirmPassword").setCustomValidity("");
+                document.getElementById("btnRegister").disabled = false;
+                document.getElementById("noti").innerHTML ="";
+            }
+        }
+        </script>
+
 </body>
 
 </html>
