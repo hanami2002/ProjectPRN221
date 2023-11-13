@@ -1,0 +1,91 @@
+﻿@page "/register"
+@model ProjectPRN.Pages.Common.RegisterModel
+@{
+}
+@using ProjectPRN.Models
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Page</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f8f9fa;
+        }
+
+        .registration-container {
+            width: 400px;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="registration-container">
+        <h2 class="text-center">Registration</h2>
+        <form method="post">
+            <div class="form-group">
+                <label for="firstName">First Name:</label>
+                <input type="text" class="form-control" asp-for="FirstName" id="firstName" required placeholder="Enter your first name">
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name:</label>
+                <input type="text" class="form-control" asp-for="Lastname" required id="lastName" placeholder="Enter your last name">
+            </div>
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" class="form-control" asp-for="Username" required id="username" placeholder="Choose a username">
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" class="form-control" asp-for="Password" required id="password" placeholder="Enter your password">
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password:</label>
+                <input oninput="validatePassword()" type="password" class="form-control" id="confirmPassword" placeholder="Confirm your password">
+            </div>
+            @if (Model.Message != null)
+            {
+                <span class="text-danger" style="color:red" asp-for="Message">@Model.Message</span>
+            }
+           
+            <button type="submit" id="btnRegister" class="btn btn-primary btn-block">Register</button>
+        </form>
+        <p class="text-center mt-3">Already have an account? <a href="/login">Login here</a></p>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+        function validatePassword() {
+            var password = document.getElementById("password").value;
+            var confirmPassword = document.getElementById("confirmPassword").value;
+
+            if (password !== confirmPassword) {
+                document.getElementById("confirmPassword").setCustomValidity("Passwords do not match");
+                document.getElementById("btnRegister").disabled = true;
+            } else {
+                document.getElementById("confirmPassword").setCustomValidity("");
+                document.getElementById("btnRegister").disabled = false;
+            }
+        }
+
+        function validateForm() {
+            validatePassword(); // Call the password validation function before submitting the form
+            // You can add additional validation logic here if needed
+            return true; // Return true to allow form submission or false to prevent it
+        }
+    </script>
+
+</body>
+</html>

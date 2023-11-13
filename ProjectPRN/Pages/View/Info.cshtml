@@ -1,0 +1,70 @@
+﻿@page "/info"
+@model ProjectPRN.Pages.View.InfoModel
+@{
+}
+@using ProjectPRN.Models
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Menu</h2>
+
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="menuDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Chọn mục
+            </button>
+            <div class="dropdown-menu" aria-labelledby="menuDropdown">
+                <a class="dropdown-item" href="#" onclick="showContent('personalInfo')">Thông tin cá nhân</a>
+                <a class="dropdown-item" href="#" onclick="showContent('changePassword')">Thay đổi mật khẩu</a>
+                <a class="dropdown-item" href="#" onclick="showContent('purchaseHistory')">Lịch sử đơn hàng</a>
+            </div>
+        </div>
+
+        <div id="personalInfo" class="content" style="display:none;">
+            <!-- Nội dung thông tin cá nhân -->
+            <h3>Thông tin cá nhân</h3>
+            <!-- Thêm các trường thông tin cá nhân ở đây -->
+        </div>
+
+        <div id="changePassword" class="content" style="display:none;">
+            <!-- Nội dung thay đổi mật khẩu -->
+            <h3>Thay đổi mật khẩu</h3>
+            <!-- Thêm các trường thay đổi mật khẩu ở đây -->
+        </div>
+
+        <div id="purchaseHistory" class="content" style="display:none;">
+            <!-- Nội dung lịch sử đơn hàng -->
+            <h3>Lịch sử đơn hàng</h3>
+            <!-- Thêm các thông tin lịch sử đơn hàng ở đây -->
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+        function showContent(contentId) {
+            // Ẩn tất cả các nội dung
+            document.querySelectorAll('.content').forEach(function (content) {
+                content.style.display = 'none';
+            });
+
+            // Hiển thị nội dung được chọn
+            document.getElementById(contentId).style.display = 'block';
+        }
+    </script>
+</body>
+</html>
+
