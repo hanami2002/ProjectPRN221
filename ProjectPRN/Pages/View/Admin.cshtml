@@ -2,6 +2,7 @@
 @model ProjectPRN.Pages.View.AdminModel
 @{
 }
+@using ProjectPRN.Models
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,13 +13,41 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <style>
         /* Hide all sections by default */
-
+        .dashboard-section,
         .view-books-section,
         .add-book-section,
         .edit-book-section,
         .delete-book-section,
         .user-manager-section {
             display: none;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+   
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .chart-container {
+            text-align: center;
         }
     </style>
 </head>
@@ -33,47 +62,352 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#" onclick="showSection('dashboard-section')">Dashboard</a>
+                    <a href="/admin?handler=Dashboard"> <button class="btn btn-primary" onclick="showSection('dashboard-section')">Dashboard</button></a>
+                   
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" onclick="showSection('view-books-section')">View Books</a>
+                    <a href="/admin?handler=Book"> <button class="btn btn-primary" onclick="showSection('view-books-section')">View Books</button></a>
+                    
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" onclick="showSection('add-book-section')">Add Book</a>
+                    <a href="/admin?handler=User">  <button class="btn btn-primary" onclick="showSection('add-book-section')">View Users</button></a>
+                    
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" onclick="showSection('edit-book-section')">Edit Book</a>
+                    <a href="/admin?handler=Order"><button class="btn btn-primary" onclick="showSection('edit-book-section')">View Order</button></a>
+                   
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" onclick="showSection('delete-book-section')">Delete Book</a>
+                    <a href="/home"><button class="btn btn-primary" onclick="showSection('delete-book-section')">Home Page</button></a>
+                    
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" onclick="showSection('user-manager-section')">User Manager</a>
-                </li>
+                @* <li class="nav-item">
+                    <button class="btn btn-primary"  onclick="showSection('user-manager-section')">User Manager</button>
+                </li> *@
             </ul>
         </div>
     </nav>
 
     <div class="container mt-4">
-        <div id="dashboard-section" class="dashboard-section">
-            <!-- Dashboard content goes here -->
-            <h2>Dashboard</h2>
-        </div>
+        @if (Model.Check == 1)
+        {
+            <div id="dashboard-section" style="display:block" class="dashboard-section">
+                <!-- Dashboard content goes here -->
+                <h2>Dashboard</h2>
+                <div class="container">
 
-        <div id="view-books-section" class="view-books-section">
-            <!-- View Books content goes here -->
-            <h2>View Books</h2>
-        </div>
+                    <div class="stats-container">
+                        <div class="stat">
+                            <h2>Total Visits</h2>
+                            <p id="totalVisits">@Model.Count</p>
+                        </div>
+                        <div class="stat">
+                            <h2>Total Interactions</h2>
+                            <p id="totalLogin">@Model.CountLogin</p>
+                        </div>
+                        <div class="stat">
+                            <h2>Total Interactions</h2>
+                            <p id="totalOrder">@Model.CountOrder</p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="interactionChart" style="display: block;box-sizing: border-box;height: 500px;width: 500px;"></canvas>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (Model.Check != 1)
+        {
+            <div id="dashboard-section"  class="dashboard-section">
+                <!-- Dashboard content goes here -->
+                <h2>Dashboard</h2>
+                <div class="container">
 
-        <div id="add-book-section" class="add-book-section">
-            <!-- Add Book form goes here -->
-            <h2>Add Book</h2>
-        </div>
+                    <div class="stats-container">
+                        <div class="stat">
+                            <h2>Total Visits</h2>
+                            <p id="totalVisits">@Model.Count</p>
+                        </div>
+                        <div class="stat">
+                            <h2>Total Interactions</h2>
+                            <p id="totalLogin">@Model.CountLogin</p>
+                        </div>
+                        <div class="stat">
+                            <h2>Total Interactions</h2>
+                            <p id="totalOrder">@Model.CountOrder</p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="interactionChart" width="500" height="500" style="display: block;box-sizing: border-box;height: 500px;width: 500px;"></canvas>
+                    </div>
+                </div>
+            </div>
+        }
+        
+        @if (Model.Check == 2)
+        {
+            <div id="view-books-section" style="display:block" class="view-books-section">
+                <!-- View Books content goes here -->
+                <h2>View Books</h2>
+                <button class="btn btn-primary" data-toggle="modal" data-target="#myModal">Add new</button>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Image</th>
+                            <th>Genre</th>
+                            <th>Price</th>
+                            <th>Decription</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (Book book in Model.Books)
+                        {
+                            <tr>
+                                <td>@book.BookId</td>
+                                <td>@book.Title </td>
+                                <td>@book.Author</td>
+                                <td>@book.Image</td>
+                                <td>@book.Genre.GenreName</td>
+                                <td>@book.Price</td>
+                                <td>@book.Description</td>
+                                <td>@book.Description</td>
+                                @* <td><button class="btn btn-primary" data-toggle="modal" data-target="#myModal">View</button></td> *@
+                            </tr>
+                        }
 
-        <div id="edit-book-section" class="edit-book-section">
-            <!-- Edit Book form goes here -->
-            <h2>Edit Book</h2>
-        </div>
+                        <!-- Add more rows as needed -->
+                    </tbody>
+                </table>
+
+
+                <div class="modal fade" id="myModal">
+                    <div class="modal-dialog">
+                        <form method="post" asp-page-handler="AddNew">
+                            <div class="modal-content">
+
+                                <!-- Modal Header -->
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Add Book</h4>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+
+                                <!-- Modal Body -->
+                                <div class="modal-body">
+
+                                    <input asp-for="Title" placeholder="Title" type="text" />
+                                </div>
+                                <div class="modal-body">
+
+                                    <input asp-for="Author" placeholder="Author" type="text" />
+                                </div>
+                                <div class="modal-body">
+
+                                    <input asp-for="Image" placeholder="image" type="text" />
+                                </div>
+                                <div class="modal-body">
+
+                                    <select asp-for="GenreId">
+                                        @foreach (Genre genre in Model.Genres)
+                                        {
+                                            <option value="@genre.GenreId">@genre.GenreName</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="modal-body">
+
+                                    <input asp-for="Price" placeholder="Price" type="text" />
+                                </div>
+
+                                <div class="modal-body">
+
+                                    <input asp-for="Description" placeholder="Description" type="text" />
+                                </div>
+
+                                <!-- Modal Footer -->
+                                <div class="modal-footer">
+                                    <button type="Submit" class="btn btn-secondary" >Add</button>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+            </div>
+        }
+        @if (Model.Check == 3)
+        {
+            <div id="add-book-section" style="display:block" class="add-book-section">
+                <!-- Add Book form goes here -->
+                <h2>User List</h2>
+                <button class="btn btn-primary" data-toggle="modal" data-target="#UserModal">Add New</button>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Address</th>
+                            <th>Role</th>
+                            <th>Username</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (User user in Model.UsersList)
+                        {
+                            <tr>
+                                <td>@user.FirstName</td>
+                                <td>@user.LastName </td>
+                                <td>@user.Email</td>
+                                <td>@user.Phone</td>
+                                <td>@user.Address</td>
+                                <td>@user.Role</td>
+                                <td>@user.Username</td>
+
+                                @* <td><button class="btn btn-primary" data-toggle="modal" data-target="#myModal">View</button></td> *@
+                            </tr>
+                        }
+
+                        <!-- Add more rows as needed -->
+                    </tbody>
+                </table>
+                <div class="modal fade" id="UserModal">
+                    <div class="modal-dialog">
+                        <form method="post" asp-page-handler="AddNewUser">
+                            <div class="modal-content">
+
+                                <!-- Modal Header -->
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Add Book</h4>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+
+                                <!-- Modal Body -->
+                                <div class="modal-body">
+
+                                    <input asp-for="FirstName" required placeholder="First Name" type="text" />
+                                </div>
+                                <div class="modal-body">
+
+                                    <input asp-for="LastName" required placeholder="Last Name" type="text" />
+                                </div>
+                                <div class="modal-body">
+
+                                    <input asp-for="UserName" required placeholder="User Name" type="text" />
+                                </div>
+                                
+                                <div class="modal-body">
+
+                                    <input asp-for="Password" required id="password" type="password" placeholder="Password" type="password" />
+                                </div>
+
+                                <div class="modal-body">
+
+                                    <input id="repassword" oninput="validatePassword()" required placeholder="Re -Password" type="password" />
+                                </div>
+                                <div class="modal-body">
+
+                                   <h1 id="noty" style="color:red">@Model.Mess</h1>
+                                </div>
+
+                                <!-- Modal Footer -->
+                                <div class="modal-footer">
+                                    <button id="btnAdd" type="Submit" class="btn btn-secondary">Add</button>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (Model.Check == 4)
+        {
+            @if (Model.OrderDetails == null)
+            {
+                <div id="edit-book-section" style="display:block" class="edit-book-section">
+                    <!-- Edit Book form goes here -->
+                    <h2>Order List</h2>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>OrderId</th>
+                                <th>User</th>
+                                <th>Order Date </th>
+                                <th>Status</th>
+                                <th>Total</th>
+                                <th>Action</th>
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (Order or in Model.Orders)
+                            {
+                                <tr>
+                                    <td>@or.OrderId</td>
+                                    <td>@or.User.Username </td>
+                                    <td>@or.OrderDate</td>
+                                    <td>@or.Status</td>
+                                    <td>@or.TotalAmount</td>
+                                    <td><a href="/admin?handler=Order&oid=@or.OrderId">View</a></td>
+
+
+                                    @* <td><button class="btn btn-primary" data-toggle="modal" data-target="#myModal">View</button></td> *@
+                                </tr>
+                            }
+
+                            <!-- Add more rows as needed -->
+                        </tbody>
+                    </table>
+                </div>
+            }
+            @if (Model.OrderDetails != null)
+            {
+                <div id="edit-book-section" style="display:block" class="edit-book-section">
+                    <!-- Edit Book form goes here -->
+                    <h2>Order List</h2>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Book Title</th>
+                                <th>Quantity</th>
+                                <th>Subtotal </th>
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (OrderDetail or in Model.OrderDetails)
+                            {
+                                <tr>
+                                    <td>@or.Book.Title</td>
+                                    <td>@or.Quantity </td>
+                                    <td>@or.Subtotal</td>
+                                    
+
+
+                                    @* <td><button class="btn btn-primary" data-toggle="modal" data-target="#myModal">View</button></td> *@
+                                </tr>
+                            }
+
+                            <!-- Add more rows as needed -->
+                        </tbody>
+                    </table>
+                </div>
+            }
+           
+        }
+
+
+        
 
         <div id="delete-book-section" class="delete-book-section">
             <!-- Delete Book form goes here -->
@@ -89,7 +423,9 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script>
         function showSection(sectionId) {
             // Hide all sections
@@ -98,6 +434,47 @@
             });
             // Show the selected section
             document.getElementById(sectionId).style.display = 'block';
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Include your custom JS file -->
+    <script src="path/to/your/js/dashboard.js"></script>
+    <script>
+            var ctx1 = document.getElementById('interactionChart').getContext('2d');
+        // Lấy tham chiếu đến canvas
+
+        // Tạo hàm để tải dữ liệu từ API
+        function fetchDataAndDrawChart() {
+            fetch('https://localhost:7179/admin?handler=Chart')
+                .then(response => response.json())
+                .then(data => {
+                    var chartData = {
+                        labels: data.list1,
+                        datasets: [{
+                            data: data.num
+                        }]
+                    };
+                    var myPieChart = new Chart(ctx1, {
+                        type: 'pie',
+                        data: chartData
+                    });
+                });
+        }
+        fetchDataAndDrawChart();
+        function validatePassword() {
+            var password = document.getElementById("password").value;
+            var confirmPassword = document.getElementById("repassword").value;
+
+            if (password !== confirmPassword) {
+                document.getElementById("repassword").setCustomValidity("Passwords do not match");
+                document.getElementById("btnAdd").disabled = true;
+                document.getElementById("not").innerHTML = " Passwords do not match";
+                document.getElementById("noty").style.color = "red";
+            } else {
+                document.getElementById("repassword").setCustomValidity("");
+                document.getElementById("btnAdd").disabled = false;
+                document.getElementById("noty").innerHTML = "";
+            }
         }
     </script>
 

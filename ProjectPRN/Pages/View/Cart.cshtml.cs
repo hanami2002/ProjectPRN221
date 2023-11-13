@@ -81,57 +81,73 @@ namespace ProjectPRN.Pages.View
                 OrderDetailList = context.OrderDetails.Where(x => x.OrderId == order.OrderId).ToList();
                 OrderDetail orderDetail = context.OrderDetails.FirstOrDefault(x => x.OrderDetailId == odid);
 
-                OrderDetailList.Remove(orderDetail);
-                OrderDetailList.ForEach(x =>
+                if (orderDetail != null)
                 {
-                    x.Book = context.Books.FirstOrDefault(y => y.BookId == x.BookId);
-                    Total += x.Subtotal;
-                });
+                    OrderDetailList.Remove(orderDetail);
+                    context.OrderDetails.Remove(orderDetail);
+                    context.OrderDetails.UpdateRange(OrderDetailList);
+                    context.SaveChanges();
+                    OrderDetailList.ForEach(x =>
+                    {
+                        x.Book = context.Books.FirstOrDefault(y => y.BookId == x.BookId);
+                        Total += x.Subtotal;
+                    });
+                }
+               
 
-                context.SaveChanges();
+                
             }
             
         }
         public IActionResult OnPost(int[] bid, int[] quantity)
         {
-            for(int i = 0;i<bid.Length;i++)
+            try
             {
-                OrderDetail orderDetail = context.OrderDetails.FirstOrDefault(x => x.BookId == bid[i] && x.OrderId==Odid);
-                orderDetail.Quantity = quantity[i];
-                context.OrderDetails.Update(orderDetail);
-                
-            }
-            context.SaveChanges();
+                for (int i = 0; i < bid.Length; i++)
+                {
+                    OrderDetail orderDetail = context.OrderDetails.FirstOrDefault(x => x.BookId == bid[i] && x.OrderId == Odid);
+                    orderDetail.Quantity = quantity[i];
+                    context.OrderDetails.Update(orderDetail);
 
-            Total = 0;
-            Genres = context.Genres.ToList();
-            if (HttpContext.Session.GetString("user") != null)
-            {
-                string data = HttpContext.Session.GetString("user");
-                Users = JsonSerializer.Deserialize<User>(data);
-            }
+                }
+                context.SaveChanges();
 
-            Order order = context.Orders.Where(x => x.UserId == Users.UserId && x.Status.Equals("process")).FirstOrDefault();
-            Odid = order.OrderId;
-            OrderDetailList = context.OrderDetails.Where(x => x.OrderId == order.OrderId).ToList();
-            OrderDetailList.ForEach(x =>
+                Total = 0;
+                Genres = context.Genres.ToList();
+                if (HttpContext.Session.GetString("user") != null)
+                {
+                    string data = HttpContext.Session.GetString("user");
+                    Users = JsonSerializer.Deserialize<User>(data);
+                }
+
+                Order order = context.Orders.Where(x => x.UserId == Users.UserId && x.Status.Equals("process")).FirstOrDefault();
+                Odid = order.OrderId;
+                OrderDetailList = context.OrderDetails.Where(x => x.OrderId == order.OrderId).ToList();
+                OrderDetailList.ForEach(x =>
+                {
+                    x.Book = context.Books.FirstOrDefault(y => y.BookId == x.BookId);
+                    Total += x.Subtotal;
+                });
+                Mess = "Dat hang thanh cong";
+                order.Status = "done";
+                order.TotalAmount = Total + 10;
+                Event e = new Event
+                {
+                    EventName = Users.Username + " Order ",
+                    EventDate = DateTime.Now,
+                    EventType = "Order",
+                    UserId = Users.UserId
+                };
+                context.Events.Add(e);
+                context.Orders.Update(order);
+                context.SaveChanges();
+                return Page();
+            }
+            catch(Exception ex)
             {
-                x.Book = context.Books.FirstOrDefault(y => y.BookId == x.BookId);
-                Total += x.Subtotal;
-            });
-            Mess = "Dat hang thanh cong";
-            order.Status = "done";
-            Event e = new Event
-            {
-                EventName = Users.Username + " Order ",
-                EventDate = DateTime.Now,
-                EventType = "Order",
-                UserId = Users.UserId
-            };
-            context.Events.Add(e);  
-            context.Orders.Update(order);
-            context.SaveChanges();
-            return Page();
+                return Redirect("/error");
+            }
+          
         }
         [BindProperty]
         public int? Odid { get; set; }

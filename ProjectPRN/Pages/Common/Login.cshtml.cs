@@ -37,23 +37,17 @@ namespace ProjectPRN.Pages.Common
             if (user != null)
             {
                 HttpContext.Session.SetString("user", JsonSerializer.Serialize(user));
-                if (user.Role.Equals("customer"))
+                Event e = new Event
                 {
-                    Event e = new Event
-                    {
-                        EventName = user.Username + " login",
-                        EventDate = DateTime.Now,
-                        EventType = "Login",
-                        UserId = user.UserId
-                    };
-                    context.Events.Add(e);
-                    context.SaveChanges();
-                    return Redirect("/home");
-                }
-                else
-                {
-                    return Redirect("/register");
-                }
+                    EventName = user.Username + " login",
+                    EventDate = DateTime.Now,
+                    EventType = "Login",
+                    UserId = user.UserId
+                };
+                context.Events.Add(e);
+                context.SaveChanges();
+                return Redirect("/home");
+                
 
             }
             else

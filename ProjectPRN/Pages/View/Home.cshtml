@@ -133,15 +133,24 @@
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
                                 <div class="dropdown-menu rounded-0 m-0">
                                     <a href="/cart" class="dropdown-item">Shopping Cart</a>
-                                    <a href="/checkout" class="dropdown-item">Checkout</a>
+                                    <a href="/checkout" class="dropdown-item">Info</a>
                                 </div>
                             </div>
-                            <a href="contact.html" class="nav-item nav-link">Contact</a>
+                            <a href="/history" class="nav-item nav-link">History</a>
+                            @if (Model.Users!=null)
+                                                     
+                            { 
+                                @if (Model.Users.Role.Equals("admin"))
+                                {
+                                    <a href="/admin" class="nav-item nav-link">Admin Page</a>
+                                }
+                               
+                            }
                         </div>
                         <div class="navbar-nav ml-auto py-0">
                             @if (Model.Users != null)
                             {
-                                <a href="" class="nav-item nav-link">@Model.Users.Username</a>
+                                <a href="/checkout" class="nav-item nav-link">@Model.Users.Username</a>
                                 <a href="/login?handler=Logout" class="nav-item nav-link">Logout</a>
                             }
                             @if (Model.Users == null)
